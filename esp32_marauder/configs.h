@@ -38,6 +38,7 @@
   //#define MARAUDER_MINI_V3
   //#define MARAUDER_M5_NANO_C6
   //#define DUAL_MINI_C5
+  //#define MARAUDER_C3_SUPERMINI
   //// END BOARD TARGETS
 
   #define JSON_SETTING_SIZE 2048
@@ -115,6 +116,8 @@
     #define HARDWARE_NAME "Dual Mini C5"
   #elif defined(MARAUDER_M5_NANO_C6)
     #define HARDWARE_NAME "M5 Nano C6"
+  #elif defined(MARAUDER_C3_SUPERMINI)
+    #define HARDWARE_NAME "ESP32-C3 SuperMini"
   #else
     #define HARDWARE_NAME "ESP32"
   #endif
@@ -611,6 +614,25 @@
   #endif
 
   #if defined(MARAUDER_M5_NANO_C6)
+    //#define FLIPPER_ZERO_HAT
+    //#define HAS_MINI_KB
+    //#define HAS_BATTERY
+    #define HAS_BT
+    //#define HAS_BUTTONS
+    #define HAS_NEOPIXEL_LED
+    //#define HAS_PWR_MGMT
+    //#define HAS_SCREEN
+    //#define HAS_MINI_SCREEN
+    //#define HAS_SD
+    //#define USE_SD
+    //#define HAS_TEMP_SENSOR
+    //#define HAS_GPS
+    #define HAS_NIMBLE_2
+    #define HAS_IDF_3
+    //#define HAS_DIRECT_UPLOAD
+  #endif
+
+  #if defined(MARAUDER_C3_SUPERMINI)
     //#define FLIPPER_ZERO_HAT
     //#define HAS_MINI_KB
     //#define HAS_BATTERY
@@ -2722,6 +2744,8 @@
       #define PIN 21
     #elif defined(MARAUDER_M5_NANO_C6)
       #define PIN 20
+    #elif defined(MARAUDER_C3_SUPERMINI)
+      #define PIN 8
     #else
       #define PIN 25
     #endif
