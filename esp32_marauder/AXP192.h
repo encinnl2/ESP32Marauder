@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef HAS_AXP192
+
 #ifndef __AXP192_H__
 #define __AXP192_H__
 
@@ -81,3 +83,5 @@ class AXP192 {
 };
 
 #endif
+
+#endif // HAS_AXP192
