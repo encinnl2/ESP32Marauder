@@ -496,6 +496,12 @@ void loop()
   #ifdef HAS_SCREEN
     delay(1);
   #else
-    delay(50);
+    #ifdef C3_SUPERMINI_OPTIMIZED
+      // ESP32-C3 single-core needs extra yield to prevent WDT resets
+      yield();
+      delay(10);
+    #else
+      delay(50);
+    #endif
   #endif
 }

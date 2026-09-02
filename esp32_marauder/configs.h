@@ -649,6 +649,7 @@
     #define HAS_NIMBLE_2
     #define HAS_IDF_3
     //#define HAS_DIRECT_UPLOAD
+    #define C3_SUPERMINI_OPTIMIZED
   #endif
   //// END BOARD FEATURES
 

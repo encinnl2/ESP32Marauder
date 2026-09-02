@@ -11554,6 +11554,10 @@ void WiFiScan::runFoxHunt(uint32_t currentTime) {
 // Function for updating scan status
 void WiFiScan::main(uint32_t currentTime)
 {
+  #ifdef C3_SUPERMINI_OPTIMIZED
+    // Prevent WDT resets on single-core ESP32-C3
+    yield();
+  #endif
   // WiFi operations
   if ((currentScanMode == WIFI_SCAN_PROBE) ||
   (currentScanMode == WIFI_SCAN_AP) ||

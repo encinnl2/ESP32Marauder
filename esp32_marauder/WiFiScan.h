@@ -175,10 +175,17 @@
 
 // PineScan and Multi SSID
 #define MULTISSID_THRESHOLD 3 // Threshold For Multi SSID
-#define MAX_MULTISSID_ENTRIES 100 // Max number of confirmed MultiSSIDs to store
-#define MAX_AP_ENTRIES 100 // Max number of APs to track for analysis
+#ifdef C3_SUPERMINI_OPTIMIZED
+  // Reduced buffer sizes to fit ESP32-C3 400KB RAM
+  #define MAX_MULTISSID_ENTRIES 25
+  #define MAX_AP_ENTRIES 30
+  #define MAX_PINESCAN_ENTRIES 25
+#else
+  #define MAX_MULTISSID_ENTRIES 100 // Max number of confirmed MultiSSIDs to store
+  #define MAX_AP_ENTRIES 100 // Max number of APs to track for analysis
+  #define MAX_PINESCAN_ENTRIES 100 // PineScan Max Entries
+#endif
 #define MAX_DISPLAY_ENTRIES 1 // Max Unique MACs to display
-#define MAX_PINESCAN_ENTRIES 100 // PineScan Max Entries
 
 #define MAX_CHANNEL     14
 
