@@ -247,6 +247,30 @@ void setup()
 
   Serial.begin(115200);
 
+  #ifdef MARAUDER_C3_SUPERMINI
+    // =================================================
+    // INSTANT-ON SOFTAP: Start WiFi AP and DNS server FIRST
+    // before any Marauder init so the AP is stable and 
+    // not affected by other startup tasks.
+    // =================================================
+    Serial.println(F("[+] Force-starting SoftAP instantly for ESP32-C3 SuperMini..."));
+    
+    // Switch to AP-only mode to avoid conflict with other tasks
+    WiFi.mode(WIFI_AP);
+    delay(100);
+    
+    // Start the SoftAP with stable settings (no password hidden issue)
+    bool ap_ok = WiFi.softAP("ESP32Marauder", "marauder", 1, false, 4);
+    if (ap_ok) {
+      Serial.println(F("[+] SoftAP started successfully!"));
+    } else {
+      Serial.println(F("[!] SoftAP failed to start!"));
+    }
+    Serial.print(F("[+] IP Address: "));
+    Serial.println(WiFi.softAPIP());
+    Serial.println(F("[+] AP Started: ESP32Marauder (pw: marauder)"));
+  #endif
+
   #ifdef HAS_ACT_LED
     pinMode(ACT_LED_PIN, OUTPUT);
     delay(100);
@@ -433,16 +457,9 @@ void setup()
 
   #ifdef MARAUDER_C3_SUPERMINI
     // ===============================================
-    // BULLETPROOF AUTO-START WEB UI for ESP32-C3 SuperMini
-    // Manually starts AP & DNS to bypass Marauder's complex file-based init
+    // WEB UI ROUTES & DNS REGISTER (runs after Marauder objects are ready)
+    // SoftAP was already started at the beginning of setup() so it's stable.
     // ===============================================
-    Serial.println(F("[+] Force-starting Web UI SoftAP for ESP32-C3 SuperMini..."));
-    
-    delay(500); // Give WiFi stack time to fully initialize
-    
-    // Force WiFi to AP mode and create access point
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP("ESP32Marauder", "marauder");
     
     // Set HTML to built-in dashboard
     evil_portal_obj.setHtml();
@@ -460,7 +477,7 @@ void setup()
     // Force the web server to run
     evil_portal_obj.runServer = true;
     
-    Serial.println(F("[+] AP Started: ESP32Marauder | IP: 192.168.4.1"));
+    Serial.println(F("[+] Web UI Routes Registered. Dashboard at 192.168.4.1"));
   #endif
 }
 
@@ -473,6 +490,23 @@ void loop()
   #ifdef MARAUDER_C3_SUPERMINI
     // Process DNS requests for captive portal
     c3_dnsServer.processNextRequest();
+
+    // Nethercap-style AP Keep-Alive:
+    // ESP32-C3 single-core can have the AP killed by RF/Radio state changes
+    // during BLE spam / deauth. We monitor and restart the AP if it goes down.
+    static uint32_t last_ap_check = 0;
+    if (currentTime - last_ap_check > 5000) { // Check every 5 seconds
+      last_ap_check = currentTime;
+      // softAPgetStationNum() returns 0 if AP interface is down or not broadcasting
+      if (WiFi.getMode() == WIFI_OFF || (WiFi.getMode() & WIFI_AP) == 0) {
+        // AP got killed by another task. Re-initialize.
+        WiFi.mode(WIFI_AP);
+        delay(50);
+        WiFi.softAP("ESP32Marauder", "marauder", 1, false, 4);
+        // Re-attach the DNS server to the new AP IP
+        c3_dnsServer.start(53, "*", WiFi.softAPIP());
+      }
+    }
   #endif
 
   #ifdef SCREEN_BUFFER
