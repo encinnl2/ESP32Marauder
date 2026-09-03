@@ -426,8 +426,21 @@ void setup()
   
   #ifdef MARAUDER_C3_SUPERMINI
     // Auto-start integrated Web UI Dashboard AP on boot
-    wifi_scan_obj.StartScan(WIFI_SCAN_EVIL_PORTAL);
-    Serial.println(F("[+] Auto-started Web UI AP: ESP32Marauder (192.168.4.1)"));
+    Serial.println(F("[+] Force-starting Web UI SoftAP for ESP32-C3 SuperMini..."));
+    
+    // Set HTML to built-in dashboard
+    evil_portal_obj.setHtml();
+    
+    // Set AP name
+    strncpy(apName, "ESP32Marauder", MAX_AP_NAME_SIZE);
+    
+    // Set AP state and start the AP & Web Server
+    evil_portal_obj.has_ap = true;
+    evil_portal_obj.setupServer();
+    evil_portal_obj.startAP();
+    evil_portal_obj.runServer = true;
+    
+    Serial.println(F("[+] AP Started: ESP32Marauder | IP: 192.168.4.1"));
   #endif
   
   cli_obj.RunSetup();

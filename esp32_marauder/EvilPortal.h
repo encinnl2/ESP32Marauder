@@ -103,11 +103,6 @@ class EvilPortal {
 
     void (*resetFunction)(void) = 0;
 
-    bool setHtml();
-    bool setAP(LinkedList<ssid>* ssids, LinkedList<AccessPoint>* access_points);
-    void setupServer();
-    void startPortal();
-    void startAP();
     void sendToDisplay(String msg);
 
   public:
@@ -118,6 +113,13 @@ class EvilPortal {
 
     bool using_serial_html;
     bool has_ap;
+    bool runServer;
+
+    bool setHtml();
+    bool setAP(LinkedList<ssid>* ssids, LinkedList<AccessPoint>* access_points);
+    void setupServer();
+    void startPortal();
+    void startAP();
 
     LinkedList<String>* html_files;
 
