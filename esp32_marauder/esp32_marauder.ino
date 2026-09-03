@@ -13,6 +13,11 @@ https://www.online-utility.org/image/convert/to/XBM
 #endif
 
 #include <stdio.h>
+#include <DNSServer.h>
+
+#ifdef MARAUDER_C3_SUPERMINI
+  DNSServer c3_dnsServer;
+#endif
 
 #ifdef HAS_GPS
   #include "GpsInterface.h"
@@ -427,20 +432,32 @@ void setup()
   cli_obj.RunSetup();
 
   #ifdef MARAUDER_C3_SUPERMINI
-    // Auto-start integrated Web UI Dashboard AP on boot (called LAST so WiFi stack is fully ready)
-    delay(500); // Give the WiFi hardware stack time to initialize fully
+    // ===============================================
+    // BULLETPROOF AUTO-START WEB UI for ESP32-C3 SuperMini
+    // Manually starts AP & DNS to bypass Marauder's complex file-based init
+    // ===============================================
     Serial.println(F("[+] Force-starting Web UI SoftAP for ESP32-C3 SuperMini..."));
+    
+    delay(500); // Give WiFi stack time to fully initialize
+    
+    // Force WiFi to AP mode and create access point
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP("ESP32Marauder", "marauder");
     
     // Set HTML to built-in dashboard
     evil_portal_obj.setHtml();
     
-    // Set AP name
+    // Set AP name and state
     strncpy(apName, "ESP32Marauder", MAX_AP_NAME_SIZE);
-    
-    // Set AP state and start the AP & Web Server
     evil_portal_obj.has_ap = true;
+    
+    // Register all web routes (/, /scanap, /blespam, /beacon, etc.)
     evil_portal_obj.setupServer();
-    evil_portal_obj.startAP();
+    
+    // Start captive portal DNS server
+    c3_dnsServer.start(53, "*", WiFi.softAPIP());
+    
+    // Force the web server to run
     evil_portal_obj.runServer = true;
     
     Serial.println(F("[+] AP Started: ESP32Marauder | IP: 192.168.4.1"));
@@ -452,6 +469,11 @@ void loop()
 {
   currentTime = millis();
   bool mini = false;
+
+  #ifdef MARAUDER_C3_SUPERMINI
+    // Process DNS requests for captive portal
+    c3_dnsServer.processNextRequest();
+  #endif
 
   #ifdef SCREEN_BUFFER
     #ifndef HAS_ILI9341
