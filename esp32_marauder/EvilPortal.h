@@ -90,7 +90,6 @@ public:
 class EvilPortal {
 
   private:
-    bool runServer;
     bool name_received;
     bool password_received;
 
