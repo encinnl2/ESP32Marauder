@@ -424,8 +424,11 @@ void setup()
 
   wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
   
+  cli_obj.RunSetup();
+
   #ifdef MARAUDER_C3_SUPERMINI
-    // Auto-start integrated Web UI Dashboard AP on boot
+    // Auto-start integrated Web UI Dashboard AP on boot (called LAST so WiFi stack is fully ready)
+    delay(500); // Give the WiFi hardware stack time to initialize fully
     Serial.println(F("[+] Force-starting Web UI SoftAP for ESP32-C3 SuperMini..."));
     
     // Set HTML to built-in dashboard
@@ -442,8 +445,6 @@ void setup()
     
     Serial.println(F("[+] AP Started: ESP32Marauder | IP: 192.168.4.1"));
   #endif
-  
-  cli_obj.RunSetup();
 }
 
 
