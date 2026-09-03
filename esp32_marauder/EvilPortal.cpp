@@ -111,6 +111,37 @@ void EvilPortal::setupServer() {
     request->send(200, "text/plain", WiFi.softAPSSID());
   });
 
+  server.on("/scanap", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_AP);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Scanning APs... Redirecting...</body></html>");
+  });
+
+  server.on("/blespam", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_SPAM_ALL);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>BLE Spam Started... Redirecting...</body></html>");
+  });
+
+  server.on("/beacon", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_SPAM);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Beacon Spam Started... Redirecting...</body></html>");
+  });
+
+  server.on("/deauth", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Deauth Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/stop", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Stopped... Redirecting...</body></html>");
+  });
+
+  server.on("/reboot", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", "Rebooting ESP32...");
+    delay(500);
+    ESP.restart();
+  });
+
   server.on("/get", HTTP_GET, [this](AsyncWebServerRequest *request) {
     String inputMessage;
     String inputParam;
@@ -165,8 +196,36 @@ bool EvilPortal::setHtml() {
       this->sendToDisplay("Could not find /" + this->target_html_name);
       this->sendToDisplay(F("Touch to exit..."));
     #endif
-    Serial.println("Could not find /" + this->target_html_name + ". Use stopscan...");
-    return false;
+
+    // Built-in integrated Web UI Dashboard for headless C3 SuperMini boards
+    const char built_in_ui[] PROGMEM = R"=====(
+<!DOCTYPE html><html><head><title>ESP32-C3 Marauder</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style>
+body{background:#0d1117;color:#c9d1d9;font-family:sans-serif;text-align:center;padding:10px;margin:0;}
+h2{color:#58a6ff;margin-top:20px;}
+p{color:#8b949e;}
+a{display:block;background:#21262d;color:#58a6ff;padding:14px;margin:8px auto;max-width:300px;text-decoration:none;border-radius:6px;font-weight:bold;border:1px solid #30363d;}
+a:hover{background:#30363d;}
+a.danger{background:#da3633;color:#fff;border:0;}
+a.attack{background:#d29922;color:#fff;border:0;}
+</style></head>
+<body>
+<h2>ESP32-C3 Marauder</h2>
+<p>Integrated Web UI Dashboard</p>
+<hr/>
+<a href='/scanap'>Scan Access Points</a>
+<a href='/blespam' class='attack'>BLE Spam (All)</a>
+<a href='/beacon' class='attack'>Beacon Spam</a>
+<a href='/deauth' class='danger'>Deauth All Targets</a>
+<a href='/stop' class='danger'>Stop Attack / Scan</a>
+<a href='/reboot' class='danger'>Reboot ESP32</a>
+</body></html>
+)=====";
+    strlcpy(index_html, built_in_ui, MAX_HTML_SIZE);
+    this->has_html = true;
+    Serial.println("Loaded built-in integrated Web UI dashboard.");
+    return true;
   }
   else {
     if (html_file.size() > MAX_HTML_SIZE) {

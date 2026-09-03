@@ -424,6 +424,12 @@ void setup()
 
   wifi_scan_obj.StartScan(WIFI_SCAN_OFF);
   
+  #ifdef MARAUDER_C3_SUPERMINI
+    // Auto-start integrated Web UI Dashboard AP on boot
+    wifi_scan_obj.StartScan(WIFI_SCAN_EVIL_PORTAL);
+    Serial.println(F("[+] Auto-started Web UI AP: ESP32Marauder (192.168.4.1)"));
+  #endif
+  
   cli_obj.RunSetup();
 }
 
