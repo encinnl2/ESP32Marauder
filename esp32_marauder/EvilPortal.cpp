@@ -122,14 +122,94 @@ void EvilPortal::setupServer() {
     request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>BLE Spam Started... Redirecting...</body></html>");
   });
 
+  server.on("/applejuice", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_APPLE_JUICE);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>AppleJuice Started... Redirecting...</body></html>");
+  });
+
+  server.on("/sourapple", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_SOUR_APPLE);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>SourApple Started... Redirecting...</body></html>");
+  });
+
+  server.on("/swiftpair", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_SWIFTPAIR_SPAM);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>SwiftPair Started... Redirecting...</body></html>");
+  });
+
+  server.on("/samsung", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_SAMSUNG_SPAM);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Samsung Spam Started... Redirecting...</body></html>");
+  });
+
+  server.on("/google", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_ATTACK_GOOGLE_SPAM);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Google FastPair Started... Redirecting...</body></html>");
+  });
+
   server.on("/beacon", HTTP_GET, [this](AsyncWebServerRequest *request) {
     wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_SPAM);
     request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Beacon Spam Started... Redirecting...</body></html>");
   });
 
+  server.on("/rickroll", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_RICK_ROLL);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Rickroll Started... Redirecting...</body></html>");
+  });
+
   server.on("/deauth", HTTP_GET, [this](AsyncWebServerRequest *request) {
     wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH);
     request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Deauth Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/deauth_t", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH_TARGETED);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Deauth Targeted Started... Redirecting...</body></html>");
+  });
+
+  server.on("/authattack", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_AUTH);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Auth Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/badmsg", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_BAD_MSG);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>BadMsg Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/csaattack", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_CSA);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>CSA Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/quiet", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_ATTACK_QUIET);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Quiet Attack Started... Redirecting...</body></html>");
+  });
+
+  server.on("/probespam", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_PROBE);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Probe Spam Started... Redirecting...</body></html>");
+  });
+
+  server.on("/sniffprobe", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_PROBE);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Probe Sniff Started... Redirecting...</body></html>");
+  });
+
+  server.on("/sniffbeacon", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_AP);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Beacon Sniff Started... Redirecting...</body></html>");
+  });
+
+  server.on("/sniffpmkid", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(WIFI_SCAN_EAPOL);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>PMKID Sniff Started... Redirecting...</body></html>");
+  });
+
+  server.on("/sniffskim", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    wifi_scan_obj.StartScan(BT_SCAN_SKIMMERS);
+    request->send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1;url=/'></head><body>Skimmer Detect Started... Redirecting...</body></html>");
   });
 
   server.on("/stop", HTTP_GET, [this](AsyncWebServerRequest *request) {
@@ -205,20 +285,47 @@ bool EvilPortal::setHtml() {
 <style>
 body{background:#0d1117;color:#c9d1d9;font-family:sans-serif;text-align:center;padding:10px;margin:0;}
 h2{color:#58a6ff;margin-top:20px;}
-p{color:#8b949e;}
-a{display:block;background:#21262d;color:#58a6ff;padding:14px;margin:8px auto;max-width:300px;text-decoration:none;border-radius:6px;font-weight:bold;border:1px solid #30363d;}
+h3{color:#8b949e;font-size:14px;margin-top:15px;text-transform:uppercase;letter-spacing:1px;}
+p{color:#8b949e;font-size:12px;}
+a{display:block;background:#21262d;color:#58a6ff;padding:12px;margin:6px auto;max-width:320px;text-decoration:none;border-radius:6px;font-weight:bold;border:1px solid #30363d;font-size:14px;}
 a:hover{background:#30363d;}
 a.danger{background:#da3633;color:#fff;border:0;}
 a.attack{background:#d29922;color:#fff;border:0;}
+a.ble{background:#a371f7;color:#fff;border:0;}
+a.sniff{background:#1f6feb;color:#fff;border:0;}
 </style></head>
 <body>
 <h2>ESP32-C3 Marauder</h2>
-<p>Integrated Web UI Dashboard</p>
+<p>Complete Web UI Dashboard</p>
 <hr/>
-<a href='/scanap'>Scan Access Points</a>
-<a href='/blespam' class='attack'>BLE Spam (All)</a>
+
+<h3>Scanners</h3>
+<a href='/scanap' class='sniff'>Scan Access Points</a>
+<a href='/sniffprobe' class='sniff'>Sniff Probe Requests</a>
+<a href='/sniffbeacon' class='sniff'>Sniff Beacons</a>
+<a href='/sniffpmkid' class='sniff'>Sniff PMKID (Handshake)</a>
+<a href='/sniffskim' class='sniff'>Detect Bluetooth Skimmers</a>
+
+<h3>WiFi Attacks</h3>
 <a href='/beacon' class='attack'>Beacon Spam</a>
-<a href='/deauth' class='danger'>Deauth All Targets</a>
+<a href='/rickroll' class='attack'>Rickroll WiFi</a>
+<a href='/deauth' class='danger'>Deauth All</a>
+<a href='/deauth_t' class='danger'>Deauth Targeted</a>
+<a href='/authattack' class='attack'>Auth Attack</a>
+<a href='/badmsg' class='attack'>BadMsg Attack</a>
+<a href='/csaattack' class='attack'>CSA Attack (Channel Switch)</a>
+<a href='/quiet' class='attack'>Quiet Attack</a>
+<a href='/probespam' class='attack'>Probe Spam</a>
+
+<h3>BLE Attacks</h3>
+<a href='/blespam' class='ble'>BLE Spam All (iOS/Android/Win)</a>
+<a href='/applejuice' class='ble'>AppleJuice Spam</a>
+<a href='/sourapple' class='ble'>SourApple Spam</a>
+<a href='/samsung' class='ble'>Samsung BLE Spam</a>
+<a href='/swiftpair' class='ble'>Windows SwiftPair Spam</a>
+<a href='/google' class='ble'>Google FastPair Spam</a>
+
+<h3>Controls</h3>
 <a href='/stop' class='danger'>Stop Attack / Scan</a>
 <a href='/reboot' class='danger'>Reboot ESP32</a>
 </body></html>
