@@ -17,7 +17,8 @@
 #include "SDInterface.h"
 #include "Buffer.h"
 #include "lang_var.h"
-#include "WiFiScan.h"
+
+class WiFiScan;
 
 extern Settings settings_obj;
 extern SDInterface sd_obj;

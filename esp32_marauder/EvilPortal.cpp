@@ -1,4 +1,5 @@
 #include "EvilPortal.h"
+#include "WiFiScan.h"
 
 char apName[MAX_AP_NAME_SIZE] = "PORTAL";
 
